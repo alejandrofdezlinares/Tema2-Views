@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Animales</title>
+</head>
+<body>
+
+    <h1>Animales</h1>
+
+    {% for animal in animales %}
+        <h2>{{ animal.nombre }}</h2>
+        <p><strong>Cuidador:</strong> {{ animal.cuidador.username }}</p>
+        <p><strong>Tipo:</strong> {{ animal.tipo }}</p>
+        <hr>
+    {% endfor %}
+
+</body>
+</html>
