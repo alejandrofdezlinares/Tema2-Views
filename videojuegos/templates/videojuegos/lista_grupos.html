@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Grupos</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #10b981;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --badge-bg: #064e3b;
+            --badge-text: #6ee7b7;
+            --tag-bg: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .members-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.75rem;
+            margin-top: auto;
+        }
+
+        .members-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .members-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            list-style: none;
+        }
+
+        .member-tag {
+            background-color: var(--tag-bg);
+            color: var(--text-color);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .empty-state {
+            background-color: var(--card-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lista de Grupos</h1>
+
+        {% if grupos %}
+            <ul class="grid">
+                {% for grupo in grupos %}
+                    <li class="card">
+                        <div>
+                            <div class="card-header">
+                                <span class="badge">ID: {{ grupo.id }}</span>
+                            </div>
+                            <h2 class="card-title">{{ grupo.nombre }}</h2>
+                            <div class="meta-info">
+                                <strong>Creador:</strong> {{ grupo.creador.username|default:"Desconocido" }} <br>
+                                {% if grupo.fecha_creacion %}
+                                    <strong>Creado:</strong> {{ grupo.fecha_creacion|date:"d/m/Y" }}
+                                {% endif %}
+                            </div>
+                            <p class="card-description">
+                                {{ grupo.descripcion|default:"Sin descripción disponible." }}
+                            </p>
+                        </div>
+
+                        <div class="members-section">
+                            <div class="members-title">Miembros:</div>
+                            <ul class="members-list">
+                                {% for miembro in grupo.miembros.all %}
+                                    <li class="member-tag">@{{ miembro.username }}</li>
+                                {% empty %}
+                                    <li class="member-tag" style="color: var(--text-muted);">Sin miembros</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <p>No hay grupos registrados en la base de datos.</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #6ee7b7;">
+                    (Añade registros desde <strong>/admin/</strong> para verlos aquí)
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Videojuegos</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #6366f1;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --badge-bg: #312e81;
+            --badge-text: #a5b4fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            border-color: var(--accent-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            background-color: var(--card-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lista de Videojuegos</h1>
+
+        {% if videojuegos %}
+            <ul class="grid">
+                {% for videojuego in videojuegos %}
+                    <li class="card">
+                        <div>
+                            <div class="card-header">
+                                <span class="badge">ID: {{ videojuego.id }}</span>
+                            </div>
+                            <h2 class="card-title">
+                                {% if videojuego.titulo %}
+                                    {{ videojuego.titulo }}
+                                {% elif videojuego.nombre %}
+                                    {{ videojuego.nombre }}
+                                {% else %}
+                                    Sin título
+                                {% endif %}
+                            </h2>
+                            <p class="card-description">
+                                {{ videojuego.descripcion|default:"Sin descripción disponible." }}
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <p>No hay videojuegos registrados en la base de datos.</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #a5b4fc;">
+                    (Añade registros desde <strong>/admin/</strong> para verlos aquí)
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
