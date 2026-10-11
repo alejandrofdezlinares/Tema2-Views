@@ -1,85 +1,166 @@
-Práctica Django: Views y Templates
+# Práctica Django: Views y Templates
 
-Descripción
+## Descripción
 
-En esta práctica he trabajado con Django para aprender a crear modelos, guardar datos en una base de datos y mostrarlos en páginas web mediante vistas, URLs y templates.
+En esta práctica he trabajado con Django para crear dos proyectos web, aprendiendo a definir modelos, guardar datos en una base de datos y mostrar esa información mediante vistas, URLs y plantillas HTML (*templates*).
 
-He realizado dos proyectos diferentes utilizando la estructura base del repositorio Tema2-Views.
+He organizado el trabajo en diferentes ramas de GitHub, utilizando una estructura base común para los dos proyectos.
 
-1. Proyecto de animales de una protectora
+## 1. Preparación del proyecto
 
-Creación de los modelos
+Primero, he utilizado el repositorio de GitHub `Tema2-Views` y he preparado la estructura del proyecto Django.
 
-Primero, he creado tres modelos con tres atributos cada uno:
+Los principales comandos utilizados para crear y preparar un proyecto Django son:
 
-Animales: contiene el nombre, el tipo y el cuidador responsable. El cuidador está relacionado con los usuarios de administración de Django mediante una clave foránea.
+# Crear un entorno virtual
+python -m venv venv
 
-Protectora: almacena el nombre, la descripción y la fecha de creación.
+# Activar el entorno virtual en Windows
+venv\Scripts\activate
 
-Colaboradores: guarda el nombre, el cargo y la fecha de entrada en la protectora.
+# Instalar Django
+pip install django
 
-Inserción de datos
+# Crear un proyecto Django
+django-admin startproject mysite .
 
-Después, he creado registros en la base de datos para cada modelo desde el panel de administración de Django. Para los animales, he creado también un usuario adicional para poder asignar distintos cuidadores.
+# Crear una aplicación
+python manage.py startapp protectora
 
-Creación de vistas, URLs y templates
+He utilizado la estructura del proyecto para organizar la configuración, las aplicaciones y las rutas de la web.
 
-A continuación, he desarrollado tres vistas, una para cada modelo. Cada vista obtiene todos los registros correspondientes de la base de datos y los pasa mediante una variable al template.
+## 2. Proyecto de animales de una protectora
 
-Después, he configurado tres URLs para acceder a las vistas y he creado tres templates HTML para mostrar detalladamente la información de los animales, las protectoras y los colaboradores.
+### Creación de modelos
 
-2. Proyecto de una red social de videojuegos
+He creado tres modelos en `models.py`:
 
-En el segundo proyecto he repetido el mismo procedimiento, pero desarrollando mi propia idea: una red social relacionada con los videojuegos.
+- **Animal:** contiene el nombre, el tipo y el cuidador responsable, relacionado mediante una clave foránea con los usuarios de Django.
+- **Protectora:** almacena el nombre, la descripción y la fecha de creación.
+- **Colaborador:** guarda el nombre, el cargo y la fecha de entrada en la protectora.
 
-Creación de los modelos
+### Migraciones de la base de datos
 
-He creado tres modelos para organizar la información:
+Después de definir los modelos, he utilizado los siguientes comandos para generar y aplicar las migraciones:
 
-Amigos: permite representar las relaciones de amistad entre usuarios.
+python manage.py makemigrations
+python manage.py migrate
 
-Grupos: permite crear grupos y asociar usuarios a ellos.
 
-Videojuegos: almacena información relacionada con los videojuegos.
+Estos comandos permiten preparar la base de datos para almacenar la información de los modelos.
 
-Inserción de datos
+### Creación de registros
 
-He creado los usuarios necesarios antes de establecer las relaciones de amistad entre ellos.
+He accedido al panel de administración de Django para crear registros de animales, protectoras y colaboradores. También he creado un usuario adicional para poder asignar cuidadores a los animales.
 
-Para los grupos, he desarrollado mi propio modelo dentro de la aplicación de videojuegos, diferenciándolo de los grupos de administración de Django, que sirven para gestionar permisos y roles de los usuarios.
+Para acceder al panel, he utilizado el servidor de desarrollo:
 
-También he creado registros para los videojuegos y los demás modelos.
 
-Creación de vistas, URLs y templates
+python manage.py runserver
 
-Siguiendo el procedimiento del primer proyecto, he creado tres vistas que consultan los registros de cada modelo y pasan los datos a sus respectivos templates.
 
-Después, he configurado tres URLs para acceder a esas vistas y he creado tres plantillas HTML que muestran la información almacenada en la base de datos.
+### Creación de vistas
 
-Tecnologías utilizadas
+En `views.py` he creado tres funciones: `animales()`, `protectoras()` y `colaboradores()`.
 
-Python: lenguaje utilizado para desarrollar la aplicación.
+Cada función utiliza `objects.all()` para obtener todos los registros de su modelo y `render()` para enviar los datos a su plantilla HTML correspondiente.
 
-Django: framework utilizado para crear los modelos, las vistas y las rutas.
+Por ejemplo:
 
-Base de datos: almacenamiento de los registros de cada modelo.
 
-HTML y templates de Django: presentación de los datos en páginas web.
+def animales(request):
+    animales = Animal.objects.all()
+    return render(
+        request,
+        'protectora/animales.html',
+        {'animales': animales}
+    )
 
-Git y GitHub: control de versiones y organización del código mediante ramas.
 
-Organización del repositorio
+### Configuración de URLs
 
-El repositorio está organizado en las siguientes ramas:
+He configurado tres rutas para acceder a las vistas y consultar la información de los animales, las protectoras y los colaboradores.
 
-Tema2-Views: contiene la estructura base utilizada en los proyectos.
+### Creación de templates
 
-1.Proyecto_Animales: contiene el proyecto de la protectora de animales.
+He creado tres plantillas HTML para mostrar los datos obtenidos desde las vistas:
 
-2.Proyecto_Videojuegos: contiene el proyecto de la red social de videojuegos.
+- `animales.html`
+- `protectoras.html`
+- `colaboradores.html`
 
-Repositorio: Tema2-Views en GitHub
+De esta forma, cada página muestra la información almacenada en su modelo correspondiente.
 
-Conclusión
+## 3. Proyecto de una red social de videojuegos
 
-Con esta práctica he aprendido a crear modelos en Django, introducir y consultar datos en la base de datos, relacionar usuarios con otros modelos y conectar las vistas con las URLs y los templates para mostrar información dinámica en una página web.
+En el segundo proyecto he repetido el procedimiento anterior, desarrollando mi propia idea: una red social relacionada con los videojuegos.
+
+### Creación de modelos
+
+He creado tres modelos:
+
+- **Amigos:** representa las relaciones de amistad entre usuarios.
+- **Grupos:** permite crear grupos y asociar usuarios.
+- **Videojuegos:** almacena información relacionada con los videojuegos.
+
+### Inserción de datos
+
+He creado primero los usuarios necesarios para poder establecer las relaciones de amistad. Después, he añadido las amistades y los registros correspondientes a los demás modelos.
+
+Para los grupos, he creado un modelo propio dentro de la aplicación de videojuegos, diferenciándolo de los grupos de administración de Django, que sirven para gestionar permisos y roles.
+
+### Vistas, URLs y templates
+
+He creado tres vistas para consultar los registros de los modelos, tres URLs para acceder a ellas y tres plantillas HTML para mostrar la información.
+
+También he utilizado las migraciones para reflejar los modelos en la base de datos.
+
+## 4. Comandos principales de Django
+
+Estos son los comandos principales utilizados durante el desarrollo y las comprobaciones del proyecto:
+
+
+# Crear migraciones a partir de los modelos
+python manage.py makemigrations
+
+# Aplicar las migraciones
+python manage.py migrate
+
+# Crear un superusuario para acceder al administrador
+python manage.py createsuperuser
+
+# Iniciar el servidor de desarrollo
+python manage.py runserver
+
+El superusuario permite acceder al panel de administración de Django para gestionar los datos.
+
+## 5. Control de versiones con Git y GitHub
+
+He utilizado Git para organizar el trabajo en ramas y GitHub para almacenar el repositorio remoto.
+
+Los comandos habituales para gestionar los cambios son:
+
+
+# Consultar el estado de los archivos
+git status
+
+# Crear y cambiar a una rama
+git checkout -b nombre-rama
+
+# Añadir los cambios
+git add .
+
+# Crear un commit
+git commit -m "Descripción de los cambios"
+
+# Subir la rama al repositorio remoto
+git push -u origin nombre-rama
+
+
+He organizado el trabajo en las siguientes ramas:
+
+- `Tema2-Views`: estructura base.
+- `1.Proyecto_Animales`: proyecto de la protectora.
+- `2.Proyecto_Videojuegos`: proyecto de la red social.
+
+También he configurado el repositorio para excluir los archivos innecesarios mediante `.gitignore`, manteniendo la base de datos para que se puedan comprobar los registros creados, tal como se solicita en la práctica.
